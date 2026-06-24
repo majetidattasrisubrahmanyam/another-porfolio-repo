@@ -185,6 +185,8 @@
                     <a href="#experience" class="nav-link">Journey</a>
                     <a href="#skills" class="nav-link">Skills</a>
                     <a href="#projects" class="nav-link">Projects</a>
+                    <a href="resume.pdf" download="MDS_Subrahmanyam_Resume.pdf" class="nav-link" title="Resume"><i
+                            class="fas fa-file-pdf"></i> Resume</a>
                     <a href="#contact" class="nav-cta">Get in Touch!</a>
                     <button id="theme-toggle" class="theme-toggle-nav" aria-label="Toggle theme">
                         <i class="fas fa-moon"></i>
@@ -221,7 +223,7 @@
                 <div class="hero-right">
                     <div class="hero-image-wrapper">
                         <div class="tape-sticker"></div>
-                        <img src="image\mine.jpeg" alt="M.D.S. Subrahmanyam" class="hero-photo" width="400" height="400"
+                        <img src="image/mine.jpeg" alt="M.D.S. Subrahmanyam" class="hero-photo" width="400" height="400"
                             fetchpriority="high">
                         <div class="deco-code">
                             <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
@@ -514,7 +516,7 @@
                             <h3 class="skill-box-title">Frontend</h3>
                         </div>
                         <div class="tech-tags">
-                            <span class="tag"><i class="fab fa-react"></i> React.js</span>
+
                             <span class="tag"><i class="fab fa-html5"></i> HTML5</span>
                             <span class="tag"><i class="fab fa-css3-alt"></i> CSS3</span>
                             <span class="tag"><i class="fab fa-js"></i> JavaScript</span>
@@ -762,9 +764,6 @@
                     </div>
                     <div class="footer-bottom-compact">
                         <span>© 2026 M.D.S. SUBRAHMANYAM</span>
-                        <a href="terminal.html" class="footer-terminal-link-compact">
-                            <i class="fas fa-terminal"></i> Terminal
-                        </a>
                     </div>
                 </div>
             </footer>
@@ -1145,11 +1144,13 @@
         // Smooth Scroll for Navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const targetId = link.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (targetId && targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 }
             });
         });

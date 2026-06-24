@@ -2948,7 +2948,8 @@ body[data-theme="dark"] .contact-card i {
 }
 
 .footer-social-compact {
-  display: none;
+  display: flex;
+  gap: 1rem;
 }
 
 .footer-social-compact a {
