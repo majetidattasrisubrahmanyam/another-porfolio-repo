@@ -72,6 +72,20 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
+    <!-- Apply theme immediately to prevent flash -->
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme');
+            if (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                theme = 'dark';
+            }
+            if (theme === 'dark') {
+                document.documentElement.style.colorScheme = 'dark';
+                document.body && document.body.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
     <!-- External JavaScript -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -189,7 +203,13 @@
                             class="fas fa-file-pdf"></i> Resume</a>
                     <a href="#contact" class="nav-cta">Get in Touch!</a>
                     <button id="theme-toggle" class="theme-toggle-nav" aria-label="Toggle theme">
-                        <i class="fas fa-moon"></i>
+                        <div class="toggle-track">
+                            <div class="toggle-icons">
+                                <i class="fas fa-sun toggle-icon-sun"></i>
+                                <i class="fas fa-moon toggle-icon-moon"></i>
+                            </div>
+                            <div class="toggle-thumb"></div>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -1116,11 +1136,19 @@
         // Theme Toggle
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
-        const icon = themeToggle.querySelector('i');
 
-        const currentTheme = localStorage.getItem('theme') || 'light';
+        // Detect system preference if no stored preference exists
+        function getPreferredTheme() {
+            const stored = localStorage.getItem('theme');
+            if (stored) return stored;
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+            return 'light';
+        }
+
+        const currentTheme = getPreferredTheme();
         body.setAttribute('data-theme', currentTheme);
-        updateIcon(currentTheme);
 
         themeToggle.addEventListener('click', () => {
             const theme = body.getAttribute('data-theme');
@@ -1128,17 +1156,15 @@
 
             body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            updateIcon(newTheme);
         });
 
-        function updateIcon(theme) {
-            if (theme === 'dark') {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    body.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
         }
 
         // Smooth Scroll for Navigation

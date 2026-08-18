@@ -210,6 +210,11 @@ html {
   --cyan: #66d9ef;
   --shadow-offset: 4px;
   --border-width: 3px;
+  --body-bg: #d0d0d0;
+  --page-gap-bg: #d0d0d0;
+  --scrollbar-border: #000;
+  --card-shadow: rgba(0, 0, 0, 0.05);
+  --coffee-text: #3c3c3c;
 }
 
 body[data-theme="dark"] {
@@ -217,6 +222,11 @@ body[data-theme="dark"] {
   --text: #ffffff;
   --border: #a8e6cf;
   --white: #2a2a2a;
+  --body-bg: #0a0a0a;
+  --page-gap-bg: #0a0a0a;
+  --scrollbar-border: #a8e6cf;
+  --card-shadow: rgba(255, 255, 255, 0.03);
+  --coffee-text: #e0e0e0;
   background: #0a0a0a;
 }
 
@@ -302,14 +312,14 @@ body[data-theme="dark"] .checkpoint.active .checkpoint-dot {
 
 ::-webkit-scrollbar-track {
   background: var(--white);
-  border-left: 3px solid #000;
+  border-left: 3px solid var(--scrollbar-border);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--yellow);
-  border: 3px solid #000;
+  border: 3px solid var(--scrollbar-border);
   border-radius: 0;
-  box-shadow: 3px 0 0 #000;
+  box-shadow: 3px 0 0 var(--scrollbar-border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -323,8 +333,8 @@ body[data-theme="dark"] .checkpoint.active .checkpoint-dot {
 
 ::-webkit-scrollbar-corner {
   background: var(--white);
-  border-left: 3px solid #000;
-  border-top: 3px solid #000;
+  border-left: 3px solid var(--scrollbar-border);
+  border-top: 3px solid var(--scrollbar-border);
 }
 
 /* Firefox scrollbar */
@@ -394,9 +404,6 @@ body[data-theme="dark"] .hero {
   background: transparent;
 }
 
-body[data-theme="dark"] .page-gap {
-  background: #0a0a0a;
-}
 
 body[data-theme="dark"] .paper-tear svg path[fill="#d0d0d0"] {
   fill: #0a0a0a;
@@ -413,13 +420,14 @@ body[data-theme="dark"] .tape-sticker {
 
 body {
   font-family: 'Space Grotesk', sans-serif;
-  background: #d0d0d0;
+  background: var(--body-bg);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
   margin: 0;
   padding: 20px;
   overflow-y: auto;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .page-wrapper {
@@ -452,16 +460,17 @@ body {
   min-height: calc(100vh - 40px);
   overflow: visible;
   position: relative;
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 /* Custom Scrollbar - Brutalism Style */
 body::-webkit-scrollbar {
   width: 16px;
-  background: #d0d0d0;
+  background: var(--body-bg);
 }
 
 body::-webkit-scrollbar-track {
-  background: #d0d0d0;
+  background: var(--body-bg);
 }
 
 body::-webkit-scrollbar-thumb {
@@ -476,25 +485,9 @@ body::-webkit-scrollbar-thumb:hover {
 /* Firefox Scrollbar */
 body {
   scrollbar-width: thin;
-  scrollbar-color: var(--border) #d0d0d0;
+  scrollbar-color: var(--border) var(--body-bg);
 }
 
-body[data-theme="dark"]::-webkit-scrollbar {
-  background: #0a0a0a;
-}
-
-body[data-theme="dark"]::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-
-body[data-theme="dark"]::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border: 3px solid var(--border);
-}
-
-body[data-theme="dark"] {
-  scrollbar-color: var(--border) #0a0a0a;
-}
 
 /* Animations */
 @keyframes fadeInUp {
@@ -711,25 +704,99 @@ body[data-theme="dark"] .job-desc i {
 }
 
 .theme-toggle-nav {
-  padding: 0.5rem 1rem;
+  position: relative;
+  width: 80px;
+  height: 40px;
   background: var(--cyan);
   border: var(--border-width) solid var(--border);
-  border-radius: 6px;
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-  min-height: 48px;
-  transition: all 0.2s ease;
-  display: inline-flex;
+  padding: 0;
+  box-shadow: 3px 3px 0 0 var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.theme-toggle-nav .toggle-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-nav .toggle-thumb {
+  position: absolute;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 3px 3px 0 0 var(--border);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  font-size: 0.85rem;
+  color: var(--text);
+  box-shadow: 1px 1px 0 var(--border);
+}
+
+body[data-theme="dark"] .theme-toggle-nav .toggle-thumb {
+  left: calc(100% - 32px);
+  background: #1a1a2e;
+  border-color: var(--border);
+}
+
+.theme-toggle-nav .toggle-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-toggle-nav .toggle-icon-sun,
+.theme-toggle-nav .toggle-icon-moon {
+  font-size: 0.8rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.theme-toggle-nav .toggle-icon-sun {
+  color: #f59e0b;
+  opacity: 1;
+}
+
+.theme-toggle-nav .toggle-icon-moon {
+  color: var(--text);
+  opacity: 0.5;
+}
+
+body[data-theme="dark"] .theme-toggle-nav {
+  background: #1e293b;
+  border-color: var(--border);
+}
+
+body[data-theme="dark"] .theme-toggle-nav .toggle-icon-sun {
+  opacity: 0.5;
+}
+
+body[data-theme="dark"] .theme-toggle-nav .toggle-icon-moon {
+  color: #a5b4fc;
+  opacity: 1;
 }
 
 .theme-toggle-nav:hover {
   transform: translate(3px, 3px);
   box-shadow: 0 0 0 var(--border);
+}
+
+.theme-toggle-nav:active .toggle-thumb {
+  width: 34px;
+  border-radius: 14px;
 }
 
 @media (max-width: 768px) {
@@ -761,9 +828,27 @@ body[data-theme="dark"] .job-desc i {
   }
 
   .theme-toggle-nav {
-    padding: 0.4rem 0.8rem;
-    min-height: 36px;
-    font-size: 0.9rem;
+    width: 64px;
+    height: 32px;
+  }
+
+  .theme-toggle-nav .toggle-thumb {
+    width: 22px;
+    height: 22px;
+    left: 3px;
+  }
+
+  body[data-theme="dark"] .theme-toggle-nav .toggle-thumb {
+    left: calc(100% - 25px);
+  }
+
+  .theme-toggle-nav .toggle-icons {
+    padding: 0 7px;
+  }
+
+  .theme-toggle-nav .toggle-icon-sun,
+  .theme-toggle-nav .toggle-icon-moon {
+    font-size: 0.7rem;
   }
 
   .navbar {
@@ -895,7 +980,7 @@ body[data-theme="dark"] .job-desc i {
   font-family: 'Caveat', cursive;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #3c3c3c;
+  color: var(--coffee-text);
   white-space: nowrap;
   grid-column: 1 / 2;
   grid-row: 2 / 3;
@@ -1044,9 +1129,9 @@ body[data-theme="dark"] .job-desc i {
 .page-gap {
   width: 100%;
   height: 300px;
-  background: #d0d0d0;
+  background: var(--page-gap-bg);
   position: relative;
-  transition: height 0.1s ease-out;
+  transition: height 0.1s ease-out, background-color 0.4s ease;
 }
 
 .hero-right {
@@ -3553,4 +3638,171 @@ body[data-theme="dark"] .nav-lazyfire {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
+}
+
+/* ============================
+   Dark Mode Polish & Transitions
+   ============================ */
+
+/* Smooth transitions on key elements for theme switching */
+.navbar,
+.card,
+.skill-box,
+.project-card,
+.stat-card,
+.contact-card,
+.footer,
+.header,
+.map-card,
+.journey-timeline,
+.journey-timeline-back,
+.journey-map-container,
+.section-title,
+.section-title-center,
+.timeline-header,
+.language-item,
+.education-card,
+.languages-card,
+.creator-project,
+.creator-github,
+.nav-lazyfire,
+.social-btn,
+.tech-badge,
+.btn-cta,
+.nav-cta,
+.nav-brand,
+.theme-toggle,
+.checkpoint-dot,
+.badge,
+.loader-overlay,
+.loader-letter,
+.loader-progress-bar,
+.footer-social-compact a,
+.footer-terminal-link-compact {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Dark mode - Map tiles inversion for better appearance */
+body[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
+}
+
+/* Dark mode - Leaflet controls */
+body[data-theme="dark"] .leaflet-control-zoom a {
+  background: var(--white) !important;
+  border-color: var(--border) !important;
+  box-shadow: 5px 5px 0 var(--border) !important;
+}
+
+body[data-theme="dark"] .leaflet-control-zoom a:hover {
+  background: var(--secondary) !important;
+}
+
+body[data-theme="dark"] .leaflet-control-home a {
+  background: var(--white) !important;
+  border-color: var(--border) !important;
+  box-shadow: 5px 5px 0 var(--border) !important;
+}
+
+body[data-theme="dark"] .leaflet-control-home a:hover {
+  background: var(--secondary) !important;
+}
+
+/* Dark mode - Loader screen */
+body[data-theme="dark"] .loader-overlay {
+  background: #1a1a1a;
+}
+
+body[data-theme="dark"] .loader-progress-fill {
+  background: var(--secondary);
+}
+
+/* Dark mode - Section title center */
+body[data-theme="dark"] .section-title-center {
+  background: var(--white);
+  color: var(--text);
+}
+
+/* Dark mode - Education card */
+body[data-theme="dark"] .education-card {
+  background: var(--white);
+}
+
+body[data-theme="dark"] .languages-card {
+  background: var(--white);
+}
+
+/* Dark mode - Contact card after line */
+body[data-theme="dark"] .contact-card::after {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Dark mode - Footer */
+body[data-theme="dark"] .footer {
+  background: var(--white);
+}
+
+/* Dark mode - Tech badge hover */
+body[data-theme="dark"] .tech-badge:hover {
+  background: var(--secondary);
+}
+
+/* Dark mode - Project card */
+body[data-theme="dark"] .project-card {
+  background: var(--white);
+}
+
+/* Dark mode - Timeline dot hover */
+body[data-theme="dark"] .timeline-item-flat:hover .timeline-dot {
+  background: var(--secondary);
+}
+
+/* Dark mode - Tag hover in skills */
+body[data-theme="dark"] .skill-box .tag:hover {
+  color: #000;
+}
+
+/* Dark mode - Button hover states */
+body[data-theme="dark"] .btn-cta:hover {
+  background: var(--secondary);
+}
+
+/* Dark mode - Hero social buttons */
+body[data-theme="dark"] .social-btn:hover {
+  background: var(--secondary);
+  color: #000;
+}
+
+/* Dark mode - Nav brand and CTA */
+body[data-theme="dark"] .nav-brand {
+  background: var(--secondary);
+}
+
+body[data-theme="dark"] .nav-cta {
+  background: var(--secondary);
+  color: #000;
+}
+
+body[data-theme="dark"] .nav-cta:hover {
+  background: var(--primary);
+}
+
+/* Dark mode - Footer terminal link */
+body[data-theme="dark"] .footer-terminal-link-compact {
+  background: var(--secondary);
+  color: #000;
+}
+
+/* Dark mode - Scrollbar styles for inner scrollbar */
+body[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--pink);
+}
+
+/* Dark mode - Map overlay */
+body[data-theme="dark"] .map-overlay-lines {
+  opacity: 0.1;
 }
