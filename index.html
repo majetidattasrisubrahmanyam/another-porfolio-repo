@@ -211,7 +211,36 @@
                             <div class="toggle-thumb"></div>
                         </div>
                     </button>
+                    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
                 </div>
+            </div>
+            <!-- Mobile dropdown menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <a href="#hero" class="mobile-menu-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#about" class="mobile-menu-link">
+                    <i class="fas fa-user"></i> About
+                </a>
+                <a href="#experience" class="mobile-menu-link">
+                    <i class="fas fa-road"></i> Journey
+                </a>
+                <a href="#skills" class="mobile-menu-link">
+                    <i class="fas fa-code"></i> Skills
+                </a>
+                <a href="#projects" class="mobile-menu-link">
+                    <i class="fas fa-folder-open"></i> Projects
+                </a>
+                <a href="resume.pdf" download="MDS_Subrahmanyam_Resume.pdf" class="mobile-menu-link">
+                    <i class="fas fa-file-pdf"></i> Resume
+                </a>
+                <a href="#contact" class="mobile-menu-link mobile-menu-cta">
+                    <i class="fas fa-envelope"></i> Get in Touch!
+                </a>
             </div>
         </nav>
 
@@ -1167,6 +1196,53 @@
             });
         }
 
+        // Hamburger Menu
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (hamburgerBtn && mobileMenu) {
+            hamburgerBtn.addEventListener('click', () => {
+                const isOpen = hamburgerBtn.classList.toggle('active');
+                mobileMenu.classList.toggle('open');
+                hamburgerBtn.setAttribute('aria-expanded', isOpen);
+            });
+
+            // Close menu when a mobile link is clicked
+            mobileMenu.querySelectorAll('.mobile-menu-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const targetId = link.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        e.preventDefault();
+                        const targetSection = document.querySelector(targetId);
+                        if (targetSection) {
+                            // Close menu first
+                            hamburgerBtn.classList.remove('active');
+                            mobileMenu.classList.remove('open');
+                            hamburgerBtn.setAttribute('aria-expanded', 'false');
+                            // Smooth scroll after a tiny delay for menu close animation
+                            setTimeout(() => {
+                                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 100);
+                        }
+                    } else {
+                        // For non-anchor links (like resume download), just close the menu
+                        hamburgerBtn.classList.remove('active');
+                        mobileMenu.classList.remove('open');
+                        hamburgerBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            });
+
+            // Close menu when clicking outside the navbar
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.navbar') && mobileMenu.classList.contains('open')) {
+                    hamburgerBtn.classList.remove('active');
+                    mobileMenu.classList.remove('open');
+                    hamburgerBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
         // Smooth Scroll for Navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -1192,6 +1268,12 @@
             if (currentScroll > lastScroll && currentScroll > 100) {
                 // Scrolling down & past threshold - hide navbar
                 navbar.classList.add('navbar-hidden');
+                // Also close mobile menu if open
+                if (hamburgerBtn && mobileMenu) {
+                    hamburgerBtn.classList.remove('active');
+                    mobileMenu.classList.remove('open');
+                    hamburgerBtn.setAttribute('aria-expanded', 'false');
+                }
             } else if (currentScroll < lastScroll) {
                 // Scrolling up - show navbar
                 navbar.classList.remove('navbar-hidden');
